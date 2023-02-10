@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:laundrivr/src/model/user/unloaded_user_metadata.dart';
-import 'package:laundrivr/src/model/user/user_metadata.dart';
-import 'package:laundrivr/src/model/user/user_metadata_repository.dart';
+import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata.dart';
+import 'package:laundrivr/src/model/repository/user/user_metadata.dart';
+import 'package:laundrivr/src/model/repository/user/user_metadata_repository.dart';
 import 'package:laundrivr/src/network/generic_fetcher.dart';
 
 import '../constants.dart';
-import '../model/user/unloaded_user_metadata_repository.dart';
-import '../model/user/user_metadata_constructor.dart';
+import '../model/repository/user/unloaded_user_metadata_repository.dart';
+import '../model/repository/user/user_metadata_constructor.dart';
 
 class UserMetadataFetcher extends GenericFetcher<UserMetadataRepository> {
   static final UserMetadataFetcher _singleton = UserMetadataFetcher._internal();
@@ -18,7 +18,7 @@ class UserMetadataFetcher extends GenericFetcher<UserMetadataRepository> {
   }
 
   UserMetadataFetcher._internal()
-      : super(const Duration(seconds: 1), UnloadedUserMetadataRepository());
+      : super(const Duration(seconds: 30), UnloadedUserMetadataRepository());
 
   @override
   Future<UserMetadataRepository> fetchFromDatabase() async {
@@ -43,6 +43,6 @@ class UserMetadataFetcher extends GenericFetcher<UserMetadataRepository> {
 
   @override
   UserMetadataRepository provideUnloadedRepository() {
-    return UserMetadataRepository(object: UnloadedUserMetadata());
+    return UnloadedUserMetadataRepository();
   }
 }

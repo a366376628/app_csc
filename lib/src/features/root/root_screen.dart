@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:laundrivr/src/features/home/home_screen.dart';
 import 'package:laundrivr/src/features/more/more_screen.dart';
-import 'package:laundrivr/src/features/purchase/purchase_screen.dart';
 import 'package:laundrivr/src/features/theme/laundrivr_theme.dart';
 import 'package:laundrivr/src/update/appcast_configuration_provider.dart';
 import 'package:laundrivr/src/update/upgrader_dialog_style_provider.dart';
@@ -12,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../../constants.dart';
+import '../../network/user_metadata_fetcher.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -23,7 +23,6 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
-    PurchaseScreen(),
     MoreScreen(),
   ];
 
@@ -43,6 +42,12 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     _authStateSubscription = supabase.auth.onAuthStateChange.listen((data) {
       if (_redirecting) return;
+
+      // clear the user metadata
+      UserMetadataFetcher().clear();
+      // update user metadata
+      UserMetadataFetcher().fetch(force: true);
+
       final session = data.session;
       if (session == null) {
         _redirecting = true;
@@ -116,13 +121,6 @@ class _RootScreenState extends State<RootScreen> {
                     icon: Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: Icon(Icons.home, size: 40),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'Packages',
-                    icon: Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Icon(Icons.shopping_cart, size: 40),
                     ),
                   ),
                   BottomNavigationBarItem(

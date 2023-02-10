@@ -1,4 +1,4 @@
-import 'package:laundrivr/src/model/user/user_metadata.dart';
+import 'package:laundrivr/src/model/repository/user/user_metadata.dart';
 
 import '../object_constructor.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:laundrivr/src/model/object_repository.dart';
+import 'package:laundrivr/src/model/repository/object_repository.dart';
 
 abstract class GenericFetcher<T extends ObjectRepository> {
   final Duration _cooldown;
@@ -21,7 +21,6 @@ abstract class GenericFetcher<T extends ObjectRepository> {
       {this.shouldRetryInfinitely = false});
 
   Future<T> fetch({bool force = false}) async {
-    log('Fetching...');
     if (DateTime.now().difference(_lastFetch) < _cooldown && !force) {
       return Future.value(_repository);
     }
@@ -33,8 +32,6 @@ abstract class GenericFetcher<T extends ObjectRepository> {
     _lastFetch = DateTime.now();
 
     _isCurrentlyFetching = true;
-
-    log('Fetching from database...');
 
     bool shouldRetry = true;
     while (shouldRetry) {

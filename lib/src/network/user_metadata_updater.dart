@@ -1,6 +1,6 @@
 import 'package:laundrivr/src/constants.dart';
-import 'package:laundrivr/src/model/user/user_metadata.dart';
-import 'package:laundrivr/src/model/user/user_metadata_repository.dart';
+import 'package:laundrivr/src/model/repository/user/user_metadata.dart';
+import 'package:laundrivr/src/model/repository/user/user_metadata_repository.dart';
 import 'package:laundrivr/src/network/user_metadata_fetcher.dart';
 
 class UserMetadataUpdater {

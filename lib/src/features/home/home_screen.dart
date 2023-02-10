@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:laundrivr/src/dialog_utils.dart';
 import 'package:laundrivr/src/features/theme/laundrivr_theme.dart';
-import 'package:laundrivr/src/model/user/unloaded_user_metadata.dart';
-import 'package:laundrivr/src/model/user/unloaded_user_metadata_repository.dart';
+import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata.dart';
+import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata_repository.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../constants.dart';
-import '../../model/user/user_metadata_repository.dart';
+import '../../model/repository/user/user_metadata_repository.dart';
 import '../../network/user_metadata_fetcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +31,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    // set the state to unloaded
+    setState(() {
+      _userMetadata = UnloadedUserMetadataRepository();
+    });
+
     // subscribe to the user metadata
     _userMetadataSubscription = UserMetadataFetcher().stream.listen((metadata) {
       // set the state
@@ -46,14 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _initializeMetadata() async {
     // re-fetch the metadata if it's not loaded (issue #4)
-    if (_userMetadata is UnloadedUserMetadata) {
-      _userMetadata = await UserMetadataFetcher().fetch();
+    if (_userMetadata is UnloadedUserMetadataRepository) {
+      // set state of _userMetadata to the value
+      UserMetadataRepository loaded = await UserMetadataFetcher().fetch();
+      setState(() {
+        _userMetadata = loaded;
+      });
     }
   }
 
   Future<void> _refreshUserMetadata() async {
-    // refresh the user metadata
-    UserMetadataFetcher().clear();
+    // set the state to unloaded
+    setState(() {
+      _userMetadata = UnloadedUserMetadataRepository();
+    });
     await UserMetadataFetcher().fetch(force: true);
   }
 
@@ -161,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   const SizedBox(height: 15),
                   Skeleton(
-                    duration: const Duration(milliseconds: 1500),
-                    isLoading: _userMetadata is UnloadedUserMetadata,
+                    duration: const Duration(milliseconds: 2000),
+                    isLoading: _userMetadata is UnloadedUserMetadataRepository,
                     skeleton: SkeletonAvatar(
                       style: SkeletonAvatarStyle(
                         shape: BoxShape.rectangle,
