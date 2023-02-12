@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:laundrivr/src/dialog_utils.dart';
 import 'package:laundrivr/src/features/theme/laundrivr_theme.dart';
-import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata.dart';
+import 'package:laundrivr/src/model/logic/load_start_try_result.dart';
 import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata_repository.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -84,10 +84,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  bool _canStartALoad() {
-    return _userMetadata is! UnloadedUserMetadata &&
-        (_userMetadata.get().loadsAvailable > 0 ||
-            _userMetadata.get().loadsAvailable == -1);
+  LoadStartTryResult _canStartALoad() {
+    if (_userMetadata is UnloadedUserMetadataRepository) {
+      return LoadStartTryResult.stillLoading;
+    }
+
+    if (_userMetadata.get().loadsAvailable == 0) {
+      return LoadStartTryResult.noneAvailable;
+    }
+
+    return LoadStartTryResult.available;
+  }
+
+  String? computeMessageFromLoadStartTryResult(
+      LoadStartTryResult loadStartTryResult) {
+    switch (loadStartTryResult) {
+      case LoadStartTryResult.stillLoading:
+        return Constants.alertStillLoadingLoads;
+      case LoadStartTryResult.noneAvailable:
+        return Constants.alertNoLoadsAvailable;
+      case LoadStartTryResult.available:
+        // TODO: Handle this case.
+        return null;
+    }
   }
 
   @override
@@ -188,33 +207,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   // const Spacer(),
                   const SizedBox(height: 25),
-                  Container(
-                    width: 320,
-                    height: constraints.maxHeight < 600 ? 115 : 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: laundrivrTheme.secondaryOpaqueBackgroundColor,
-                      // add box shadow
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
-                          spreadRadius: 2,
-                          blurRadius: 20,
-                          offset:
-                              const Offset(2, 2), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        // check if the user data is loaded and if the user has loads available
-                        if (!_canStartALoad()) {
-                          DialogUtils().showDialog(
-                              'Oops!', 'You have no loads available!');
-                          return;
-                        }
-                        Navigator.pushNamed(context, '/scan_qr');
-                      },
+                  GestureDetector(
+                    onTap: () {
+                      LoadStartTryResult result = _canStartALoad();
+
+                      if (result != LoadStartTryResult.available) {
+                        DialogUtils().showDialog('Oops!',
+                            computeMessageFromLoadStartTryResult(result)!);
+                        return;
+                      }
+                      Navigator.pushNamed(context, '/scan_qr');
+                    },
+                    child: Container(
+                      width: 320,
+                      height: constraints.maxHeight < 600 ? 115 : 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: laundrivrTheme.secondaryOpaqueBackgroundColor,
+                        // add box shadow
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            spreadRadius: 2,
+                            blurRadius: 20,
+                            offset: const Offset(
+                                2, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -239,32 +259,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  Container(
-                    width: 320,
-                    height: constraints.maxHeight < 600 ? 115 : 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: laundrivrTheme.secondaryOpaqueBackgroundColor,
-                      // add box shadow
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
-                          spreadRadius: 2,
-                          blurRadius: 20,
-                          offset: const Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        // check if the user data is loaded and if the user has loads available
-                        if (!_canStartALoad()) {
-                          DialogUtils().showDialog(
-                              'Oops!', 'You have no loads available!');
-                          return;
-                        }
-                        Navigator.pushNamed(context, '/number_entry');
-                      },
+                  GestureDetector(
+                    onTap: () {
+                      LoadStartTryResult result = _canStartALoad();
+
+                      if (result != LoadStartTryResult.available) {
+                        DialogUtils().showDialog('Oops!',
+                            computeMessageFromLoadStartTryResult(result)!);
+                        return;
+                      }
+                      Navigator.pushNamed(context, '/number_entry');
+                    },
+                    child: Container(
+                      width: 320,
+                      height: constraints.maxHeight < 600 ? 115 : 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: laundrivrTheme.secondaryOpaqueBackgroundColor,
+                        // add box shadow
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            spreadRadius: 2,
+                            blurRadius: 20,
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(

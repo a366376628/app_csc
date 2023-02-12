@@ -18,6 +18,11 @@ abstract class Constants {
   static const String termsOfUseUrl = "https://laundrivr.com/terms";
 
   static const String websiteUrl = "https://laundrivr.com";
+
+  static const String alertNoLoadsAvailable = "You have no loads available!";
+
+  static const String alertStillLoadingLoads =
+      "Please wait while we fetch your loads!";
 }
 
 extension ShowSnackBar on BuildContext {
