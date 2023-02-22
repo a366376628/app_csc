@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:laundrivr/src/dialog_utils.dart';
 import 'package:laundrivr/src/features/theme/laundrivr_theme.dart';
 import 'package:laundrivr/src/model/logic/load_start_try_result.dart';
 import 'package:laundrivr/src/model/repository/user/unloaded_user_metadata_repository.dart';
@@ -89,24 +88,12 @@ class _HomeScreenState extends State<HomeScreen> {
       return LoadStartTryResult.stillLoading;
     }
 
-    if (_userMetadata.get().loadsAvailable == 0) {
+    if (_userMetadata.get().loadsAvailable <= 0 &&
+        _userMetadata.get().loadsAvailable != -1) {
       return LoadStartTryResult.noneAvailable;
     }
 
     return LoadStartTryResult.available;
-  }
-
-  String? computeMessageFromLoadStartTryResult(
-      LoadStartTryResult loadStartTryResult) {
-    switch (loadStartTryResult) {
-      case LoadStartTryResult.stillLoading:
-        return Constants.alertStillLoadingLoads;
-      case LoadStartTryResult.noneAvailable:
-        return Constants.alertNoLoadsAvailable;
-      case LoadStartTryResult.available:
-        // TODO: Handle this case.
-        return null;
-    }
   }
 
   @override
@@ -210,13 +197,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                     onTap: () {
                       LoadStartTryResult result = _canStartALoad();
-
-                      if (result != LoadStartTryResult.available) {
-                        DialogUtils().showDialog('Oops!',
-                            computeMessageFromLoadStartTryResult(result)!);
-                        return;
-                      }
-                      Navigator.pushNamed(context, '/scan_qr');
+                      result.whenAvailable(() {
+                        Navigator.pushNamed(context, '/scan_qr');
+                      });
+                      result.whenNoneAvailable();
+                      result.whenStillLoading();
                     },
                     child: Container(
                       width: 320,
@@ -263,12 +248,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       LoadStartTryResult result = _canStartALoad();
 
-                      if (result != LoadStartTryResult.available) {
-                        DialogUtils().showDialog('Oops!',
-                            computeMessageFromLoadStartTryResult(result)!);
-                        return;
-                      }
-                      Navigator.pushNamed(context, '/number_entry');
+                      result.whenAvailable(() {
+                        Navigator.pushNamed(context, '/number_entry');
+                      });
+                      result.whenNoneAvailable();
+                      result.whenStillLoading();
                     },
                     child: Container(
                       width: 320,

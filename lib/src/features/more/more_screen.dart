@@ -111,62 +111,36 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        _launchURL(Constants.privacyPolicyUrl);
-                      },
-                      child: Text(
-                        'Privacy Policy',
-                        style: laundrivrTheme.primaryTextStyle!.copyWith(
-                          color: laundrivrTheme.primaryBrightTextColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  width: 320,
-                  height: 75,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: laundrivrTheme.brightBadgeBackgroundColor,
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        _launchURL(Constants.termsOfUseUrl);
-                      },
-                      child: Text(
-                        'Terms of Use',
-                        style: laundrivrTheme.primaryTextStyle!.copyWith(
-                          color: laundrivrTheme.primaryBrightTextColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  width: 320,
-                  height: 75,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: laundrivrTheme.brightBadgeBackgroundColor,
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
                         _launchURL(Constants.websiteUrl);
                       },
                       child: Text(
-                        'Visit the Website',
+                        'Privacy and Terms',
+                        style: laundrivrTheme.primaryTextStyle!.copyWith(
+                          color: laundrivrTheme.primaryBrightTextColor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: 320,
+                  height: 75,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: laundrivrTheme.brightBadgeBackgroundColor,
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        _launchURL(Constants.accountManagementUrl);
+                      },
+                      child: Text(
+                        'Refill Account',
                         style: laundrivrTheme.primaryTextStyle!.copyWith(
                           color: laundrivrTheme.primaryBrightTextColor,
                           fontSize: 32,

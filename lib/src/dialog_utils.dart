@@ -16,18 +16,19 @@ class DialogUtils {
         windowPosition: AlertWindowPosition.screenCenter);
   }
 
-  Future<void> showDialogWithActions(
-      String title, String message, Map<AlertButton, Function> actions) async {
+  Future<void> showDialogYesNo(
+      String title, String message, Function yes, Function no) async {
     AlertButton response = await FlutterPlatformAlert.showAlert(
         windowTitle: title,
         text: message,
-        alertStyle: AlertButtonStyle.ok,
+        alertStyle: AlertButtonStyle.yesNo,
         iconStyle: IconStyle.information,
         windowPosition: AlertWindowPosition.screenCenter);
-    for (var action in actions.entries) {
-      if (action.key == response) {
-        action.value();
-      }
+
+    if (response == AlertButton.yesButton) {
+      yes();
+    } else if (response == AlertButton.noButton) {
+      no();
     }
   }
 }
