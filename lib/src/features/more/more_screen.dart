@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +52,15 @@ class _MoreScreenState extends State<MoreScreen> {
       );
     }
 
-    if (!await launchUrlString(url)) {
+    bool couldLaunch = false;
+    if (Platform.isIOS || Platform.isMacOS) {
+      couldLaunch = await launchUrlString(Constants.accountManagementUrl);
+    } else {
+      couldLaunch = await launchUrlString(Constants.accountManagementUrl,
+          mode: LaunchMode.externalApplication);
+    }
+
+    if (!couldLaunch) {
       throw 'Could not launch $url';
     }
   }

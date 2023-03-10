@@ -19,7 +19,7 @@ abstract class Constants {
 
   static const String websiteUrl = "https://laundrivr.com";
 
-  static const String accountManagementUrl = "https://web.laundrivr.com/";
+  static const String accountManagementUrl = "https://laundrivr.com/";
 
   static const String alertNoLoadsAvailable =
       "You have no loads available. Would you like to refill your account?";

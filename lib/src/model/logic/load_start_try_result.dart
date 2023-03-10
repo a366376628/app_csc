@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:laundrivr/src/dialog_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../constants.dart';
@@ -10,7 +13,14 @@ extension LoadStartTryResultActionExtension on LoadStartTryResult {
     if (this == LoadStartTryResult.noneAvailable) {
       // create actions
       yes() {
-        launchUrlString(Constants.accountManagementUrl);
+        // if ios, launch
+        // if android, launch external browser
+        if (Platform.isIOS || Platform.isMacOS) {
+          launchUrlString(Constants.accountManagementUrl);
+        } else {
+          launchUrlString(Constants.accountManagementUrl,
+              mode: LaunchMode.externalApplication);
+        }
       }
 
       no() {

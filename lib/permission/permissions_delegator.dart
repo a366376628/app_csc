@@ -16,7 +16,7 @@ class PermissionsDelegator extends Delegator<BuildContext> {
   }
 
   List<Permission> _getRequiredPermissions() {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       return <Permission>[
         Permission.bluetooth,
       ];

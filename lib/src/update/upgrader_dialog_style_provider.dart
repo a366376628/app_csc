@@ -14,7 +14,7 @@ class UpgraderDialogStyleProvider {
 
   /// The default dialog style for the [Upgrader] widget (based on the platform).
   UpgradeDialogStyle get defaultDialogStyle {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       return UpgradeDialogStyle.cupertino;
     } else {
       return UpgradeDialogStyle.material;
